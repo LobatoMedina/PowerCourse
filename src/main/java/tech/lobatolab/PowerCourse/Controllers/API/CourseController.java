@@ -1,5 +1,6 @@
 package tech.lobatolab.PowerCourse.Controllers.API;
 
+import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +25,12 @@ public class CourseController {
     @GetMapping("course/view/all")
     private ResponseEntity<List<PreviewCourseDTO>> getAllCourse(){
         return ResponseEntity.ok().body(null);
+    }
+    @GetMapping("course/search={name}")
+    private ResponseEntity<PreviewCourseDTO> getCourseByName(
+            @PathParam("name") String name
+    ){
+        return  ResponseEntity.ok().body(null);
     }
 
 }

@@ -16,7 +16,8 @@ public interface ICourseService {
     void uploadCourse(UploadCourseDTO uploadCourseDTO, MultipartFile thumbnail);
     void archiveCoruse(Long idCourse );
     void EnrollCourse(Long idCourse, Long idUser);
-
+    void findCourseByName(String name);
+    MultipartFile printCertified();
 
 
 
