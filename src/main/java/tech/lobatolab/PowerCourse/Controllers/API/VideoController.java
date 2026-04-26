@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import tech.lobatolab.PowerCourse.Services.Interfaces.IVideoService;
 
 import java.nio.file.Paths;
 
@@ -16,12 +17,18 @@ import java.nio.file.Paths;
 @RequestMapping("/video")
 @RequiredArgsConstructor
 public class VideoController {
-
+    private final IVideoService videoService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<Resource> geetVideo(
+    public ResponseEntity<Resource> getVideo(
             @PathVariable("id") Long id){
-        return ResponseEntity.ok().body(null);
+        try{
+            return  ResponseEntity.ok().body(videoService.returnVideoById(id));
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body(null);
+        }
+
     }
 
 }
