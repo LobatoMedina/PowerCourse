@@ -10,4 +10,7 @@ import java.io.IOException;
 public interface IVideoService {
     Resource returnVideoById(Long id);
     String saveVideo(MultipartFile file) throws IOException;
+    Boolean isVideoWatched(Long id);
+    void saveSecondsViewed(int seconds);
+
 }

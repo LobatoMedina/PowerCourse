@@ -10,5 +10,5 @@ import java.util.Optional;
 @Service
 public interface IImageService {
     Optional<Resource> requestImageById(Long id);
-    Optional<Long> saveImageAndReturnId(MultipartFile multipartFile) throws IOException;
+    Optional<String> saveImageAndReturnPath(MultipartFile multipartFile) throws IOException;
 }
