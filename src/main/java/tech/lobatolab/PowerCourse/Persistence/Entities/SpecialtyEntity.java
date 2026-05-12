@@ -1,6 +1,5 @@
 package tech.lobatolab.PowerCourse.Persistence.Entities;
 
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,15 +11,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @Entity
-@Table(name ="tbl_ope_course")
-public class CourseEntity {
+@Table(name ="tbl_cat_specialty")
+public class SpecialtyEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long courseId;
-    private String courseCourse;
-    private Long teacherId;
-    private int courseDurationSeconds;
-    private int course_videos;
-    private int imageId;
+    private Long specialtyId;
+    private String specialtySpecialty;
 
 }

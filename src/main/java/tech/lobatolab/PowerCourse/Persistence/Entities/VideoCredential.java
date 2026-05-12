@@ -7,20 +7,25 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
+
 @AllArgsConstructor
-@Data
-@Builder
 @NoArgsConstructor
+@Builder
+@Data
 @Entity
-@Table(name ="tbl_ope_course")
-public class CourseEntity {
+@Table(name = "tbl_rel_video_credential")
+public class VideoCredential {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long courseId;
-    private String courseCourse;
-    private Long teacherId;
-    private int courseDurationSeconds;
-    private int course_videos;
-    private int imageId;
+    private Long videoCredentialId;
+    private Long videoId;
+    private Long credentialId;
+    private Date dateLastSeen;
+    private int secondsViewed;
+    private Boolean videoIsWatched;
+
+
 
 }

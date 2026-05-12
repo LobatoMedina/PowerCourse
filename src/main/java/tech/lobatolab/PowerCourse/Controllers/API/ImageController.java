@@ -1,24 +1,38 @@
 package tech.lobatolab.PowerCourse.Controllers.API;
 
-
-import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 import tech.lobatolab.PowerCourse.Services.Interfaces.IImageService;
 
 @RestController
 @RequestMapping("/img")
 @RequiredArgsConstructor
 public class ImageController {
+
+    @Autowired
     private final IImageService imageService;
-    @GetMapping("/img/url={id}")
-    private ResponseEntity<MultipartFile> getImage(
-            @PathParam("id") Long id
-    ){
-        return ResponseEntity.ok().body(null);
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Resource> getImage(@PathVariable("id") Long id) {
+        try {
+
+            Resource imageResource = imageService.requestImageById(id).orElse(null);
+            String xd =imageResource.getFilename().substring(imageResource.getFilename().lastIndexOf("."));
+            return ResponseEntity.ok()
+                    .contentType(MediaType.valueOf(xd))
+                    .body(imageResource);
+
+
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

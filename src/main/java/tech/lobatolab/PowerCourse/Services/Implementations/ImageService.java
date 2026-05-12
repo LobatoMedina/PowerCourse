@@ -20,12 +20,13 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class ImageService implements IImageService {
-    private static final List<String> ALLOWED_TYPES = Arrays.asList(".jpeg", ".jpg", ".web", ".png");
-    private static final Path ImagePath = Path.of("Images/");
+    private static final List<String> ALLOWED_TYPES = Arrays.asList("image/jpeg", "image/png", "image/webp");
+    private static final Path ImagePath = Path.of("Uploads/Images");
     private final ImageRepository imageRepository;
 
     @Override
@@ -47,7 +48,7 @@ public class ImageService implements IImageService {
     @Override
     public Optional<String> saveImageAndReturnPath(MultipartFile multipartFile) throws IOException {
         var contentType =multipartFile.getContentType();
-        if(contentType == null || ALLOWED_TYPES.contains(contentType)){
+        if(contentType == null || !ALLOWED_TYPES.contains(contentType)){
             throw new RuntimeException("Formato no permitido");
         }
         if(!Files.exists(ImagePath)){
@@ -55,7 +56,7 @@ public class ImageService implements IImageService {
             return Optional.empty();
         }
         String extension = multipartFile.getOriginalFilename().substring(multipartFile.getOriginalFilename().lastIndexOf("."));
-        String filename = "image_"+LocalDate.now() + extension;
+        String filename = "image_"+LocalDate.now()+ UUID.randomUUID() + extension;
         Files.copy(multipartFile.getInputStream(), ImagePath.resolve(filename));
         return Optional.of(filename);
     }

@@ -17,12 +17,13 @@ import java.nio.file.Paths;
 import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class VideoService implements IVideoService {
-    private static final List<String> ALLOWED_TYPES= Arrays.asList(".mp4");
-    private final Path videoPath = Paths.get("courses/");
+    private static final List<String> ALLOWED_TYPES= Arrays.asList("video/mp4");
+    private final Path videoPath = Paths.get("Uploads/courses");
     private final VideoRepository videoRepository;
     @Override
     public Resource returnVideoById(Long id){
@@ -41,13 +42,15 @@ public class VideoService implements IVideoService {
     }
     public String saveVideo(MultipartFile multipartFile) throws IOException {
         String contentype = multipartFile.getContentType();
+
         if(contentype == null || !ALLOWED_TYPES.contains(contentype)){
-            throw new RuntimeException("Formato no aceptado");
+            throw new RuntimeException("Formato no aceptado"+ contentype);
         }
         if(!Files.exists(videoPath)){
             Files.createDirectories(videoPath);
         }
-        try{String filename = "VID" + LocalTime.now() +".mp4";
+        try{
+            String filename = "VID_" + LocalTime.now()+ UUID.randomUUID() +".mp4";
             Files.copy(multipartFile.getInputStream(), this.videoPath.resolve(filename));
             return filename;
         }catch (Exception e){
@@ -57,13 +60,20 @@ public class VideoService implements IVideoService {
     }
 
     @Override
-    public Boolean isVideoWatched(Long id) {
-        
-        return null;
-    }
+    public Boolean isVideoWatched(Long id,Long credentialId) {
+        return  videoRepository.isVideoWatched(id, credentialId);
 
+    }
     @Override
-    public void saveSecondsViewed(int seconds) {
+    public void saveSecondsViewed(Long videoId,Long credentialId, Integer secondsViewed) {
+        videoRepository.saveSecondsViewed(videoId, credentialId, secondsViewed).orElseThrow(() -> {throw new RuntimeException("Video no encontrado");});
+    }
+    @Override
+    public Long getNextVideo(Long courseId, Long credentialId){
+        return  videoRepository.getNextVideo(courseId,credentialId).orElseThrow(()->{
+            throw new RuntimeException("Sexo");
+        });
 
     }
+
 }

@@ -1,26 +1,25 @@
 package tech.lobatolab.PowerCourse.Persistence.Entities.Views;
 
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.View;
 
 @Entity
-@Table(name ="view_preview_course")
+@Table(name ="view_teacher_info")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Builder
-public class CoursePreview {
+public class TeacherView {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long courseId;
-    private String name ;
-    private Integer rating;
-    private String image;
-    private String teacherName;
+    private Long id;
+    private String name;
+    private String email;
+    private String specialty;
 
 
 }

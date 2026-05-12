@@ -6,11 +6,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
-@AllArgsConstructor
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
-public class UploadCourseDTO {
-    private String name;
-    private Long teacher_id;
+public class UploadVideoDTO {
+    private Long courseId;
+    private Integer videoDuration;
+    private  String name;
+
 }

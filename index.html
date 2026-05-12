@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EduCore — Panel Administrativo</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════
+       VISTA: LOGIN
+  ═══════════════════════════════════════════ -->
+  <div id="view-login" class="view active">
+    <div class="login-bg">
+      <div class="login-grid-overlay"></div>
+      <div class="login-accent-circle"></div>
+      <div class="login-accent-circle login-accent-circle--2"></div>
+    </div>
+
+    <div class="login-wrapper">
+      <div class="login-brand">
+        <span class="brand-icon">⬡</span>
+        <span class="brand-name">EduCore</span>
+      </div>
+
+      <div class="login-card">
+        <div class="login-card__header">
+          <p class="login-card__eyebrow">Sistema de Gestión</p>
+          <h1 class="login-card__title">Acceso Administrativo</h1>
+        </div>
+
+        <div class="login-card__body">
+          <!-- Mensaje de error -->
+          <div id="login-error" class="alert alert--error" style="display:none">
+            <span class="alert__icon">⚠</span>
+            <span id="login-error-msg">Credenciales incorrectas.</span>
+          </div>
+
+          <!-- Campo Email -->
+          <div class="field-group">
+            <label class="field-label" for="login-email">Correo electrónico</label>
+            <div class="input-wrapper">
+              <span class="input-icon">◎</span>
+              <input
+                class="input"
+                type="email"
+                id="login-email"
+                placeholder="admin@educore.mx"
+                autocomplete="email"
+              />
+            </div>
+          </div>
+
+          <!-- Campo Password -->
+          <div class="field-group">
+            <label class="field-label" for="login-password">Contraseña</label>
+            <div class="input-wrapper">
+              <span class="input-icon">◈</span>
+              <input
+                class="input"
+                type="password"
+                id="login-password"
+                placeholder="••••••••"
+                autocomplete="current-password"
+              />
+            </div>
+          </div>
+
+          <!-- Botón de ingreso -->
+          <button class="btn btn--primary btn--full" id="btn-login">
+            <span class="btn__label">Ingresar al Panel</span>
+            <span class="btn__arrow">→</span>
+          </button>
+
+          <p class="login-card__hint">
+            <span class="mono">// Demo: cualquier email + contraseña → acceso directo</span>
+          </p>
+        </div>
+      </div>
+
+      <p class="login-footer">EduCore Admin v2.4.1 &nbsp;·&nbsp; JWT Auth ready</p>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════
+       VISTA: DASHBOARD
+  ═══════════════════════════════════════════ -->
+  <div id="view-dashboard" class="view">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar__brand">
+        <span class="brand-icon">⬡</span>
+        <span class="brand-name">EduCore</span>
+      </div>
+
+      <nav class="sidebar__nav">
+        <p class="sidebar__nav-label">Módulos</p>
+        <button class="nav-item active" data-module="profesores">
+          <span class="nav-item__icon">◈</span>
+          <span class="nav-item__label">Profesores</span>
+        </button>
+        <button class="nav-item" data-module="cursos">
+          <span class="nav-item__icon">◎</span>
+          <span class="nav-item__label">Cursos</span>
+        </button>
+        <button class="nav-item" data-module="analiticas">
+          <span class="nav-item__icon">◇</span>
+          <span class="nav-item__label">Analíticas</span>
+        </button>
+      </nav>
+
+      <div class="sidebar__footer">
+        <div class="user-badge">
+          <div class="user-badge__avatar">A</div>
+          <div class="user-badge__info">
+            <p class="user-badge__name">Admin</p>
+            <p class="user-badge__role mono">root access</p>
+          </div>
+        </div>
+        <button class="btn-logout" id="btn-logout" title="Cerrar sesión">⏻</button>
+      </div>
+    </aside>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="main-content">
+
+      <!-- TOPBAR -->
+      <header class="topbar">
+        <div class="topbar__left">
+          <button class="menu-toggle" id="menu-toggle">☰</button>
+          <div class="breadcrumb">
+            <span class="breadcrumb__root mono">panel</span>
+            <span class="breadcrumb__sep">/</span>
+            <span class="breadcrumb__current" id="breadcrumb-current">profesores</span>
+          </div>
+        </div>
+        <div class="topbar__right">
+          <div class="status-badge">
+            <span class="status-dot"></span>
+            <span class="mono">JWT &nbsp;ready</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- MÓDULO: PROFESORES -->
+      <section id="module-profesores" class="module active">
+        <div class="module-header">
+          <div>
+            <p class="module-eyebrow">Gestión</p>
+            <h2 class="module-title">Profesores</h2>
+          </div>
+          <div class="module-stats">
+            <div class="stat-chip">
+              <span class="stat-chip__value" id="stat-profesores">0</span>
+              <span class="stat-chip__label">registrados</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="content-grid content-grid--split">
+
+          <!-- Formulario de alta -->
+          <div class="card">
+            <div class="card__header">
+              <h3 class="card__title">Alta de Profesor</h3>
+              <span class="card__badge">nuevo</span>
+            </div>
+            <div class="card__body">
+              <div class="field-group">
+                <label class="field-label" for="prof-nombre">Nombre completo</label>
+                <div class="input-wrapper">
+                  <input class="input" type="text" id="prof-nombre" placeholder="Dr. Ana Martínez"/>
+                </div>
+              </div>
+              <div class="field-group">
+                <label class="field-label" for="prof-email">Correo electrónico</label>
+                <div class="input-wrapper">
+                  <input class="input" type="email" id="prof-email" placeholder="ana@educore.mx"/>
+                </div>
+              </div>
+              <div class="field-group">
+                <label class="field-label" for="prof-password">Contraseña temporal</label>
+                <div class="input-wrapper">
+                  <input class="input" type="password" id="prof-password" placeholder="••••••••"/>
+                </div>
+              </div>
+
+              <div id="prof-error" class="alert alert--error" style="display:none">
+                <span class="alert__icon">⚠</span>
+                <span id="prof-error-msg">Completa todos los campos.</span>
+              </div>
+              <div id="prof-success" class="alert alert--success" style="display:none">
+                <span class="alert__icon">✓</span>
+                <span>Profesor registrado correctamente.</span>
+              </div>
+
+              <!-- 
+                ════════════════════════════════════════
+                TODO: Reemplazar la lógica mock con:
+                
+                const res = await fetch('/api/profesores', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('jwt_token')}`
+                  },
+                  body: JSON.stringify({ nombre, email, password })
+                });
+                const data = await res.json();
+                ════════════════════════════════════════
+              -->
+              <button class="btn btn--primary btn--full" id="btn-add-profesor">
+                <span class="btn__label">Registrar Profesor</span>
+                <span class="btn__arrow">+</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Tabla de profesores -->
+          <div class="card card--table">
+            <div class="card__header">
+              <h3 class="card__title">Registro de Profesores</h3>
+              <button class="btn-icon" title="Actualizar" id="btn-refresh-profs">↻</button>
+            </div>
+            <!-- 
+              ════════════════════════════════════════
+              TODO: Al cargar el módulo, fetchear:
+              
+              const res = await fetch('/api/profesores', {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('jwt_token')}` }
+              });
+              const { data } = await res.json();
+              renderProfesoresTable(data);
+              ════════════════════════════════════════
+            -->
+            <div class="table-wrapper">
+              <table class="data-table" id="tabla-profesores">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="tbody-profesores">
+                  <tr class="table-empty">
+                    <td colspan="5">
+                      <span class="mono">// Sin registros aún</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+
+      <!-- MÓDULO: CURSOS -->
+      <section id="module-cursos" class="module">
+        <div class="module-header">
+          <div>
+            <p class="module-eyebrow">Gestión</p>
+            <h2 class="module-title">Cursos</h2>
+          </div>
+          <div class="module-stats">
+            <div class="stat-chip">
+              <span class="stat-chip__value" id="stat-cursos">0</span>
+              <span class="stat-chip__label">publicados</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="content-grid content-grid--split">
+
+          <!-- Formulario de alta de curso -->
+          <div class="card">
+            <div class="card__header">
+              <h3 class="card__title">Alta de Curso</h3>
+              <span class="card__badge">nuevo</span>
+            </div>
+            <div class="card__body">
+              <div class="field-group">
+                <label class="field-label" for="curso-nombre">Nombre del curso</label>
+                <div class="input-wrapper">
+                  <input class="input" type="text" id="curso-nombre" placeholder="Diseño UX Avanzado"/>
+                </div>
+              </div>
+
+              <div class="field-group">
+                <label class="field-label" for="curso-profesor">Profesor asignado</label>
+                <div class="select-wrapper">
+                  <!-- 
+                    ════════════════════════════════════════
+                    TODO: Poblar este select dinámicamente:
+
+                    const res = await fetch('/api/profesores', {
+                      headers: { 'Authorization': `Bearer ${localStorage.getItem('jwt_token')}` }
+                    });
+                    const { data } = await res.json();
+                    populateSelectProfesores(data);
+                    ════════════════════════════════════════
+                  -->
+                  <select class="select" id="curso-profesor">
+                    <option value="">— Selecciona un profesor —</option>
+                    <option value="mock-1">Dr. Ana Martínez (mock)</option>
+                    <option value="mock-2">Lic. Carlos Rueda (mock)</option>
+                    <option value="mock-3">Ing. Sofia Vela (mock)</option>
+                  </select>
+                  <span class="select-chevron">▾</span>
+                </div>
+              </div>
+
+              <div class="field-group">
+                <label class="field-label" for="curso-thumbnail">Miniatura del curso</label>
+                <div class="file-drop" id="file-drop-area">
+                  <input type="file" id="curso-thumbnail" accept="image/*" class="file-input"/>
+                  <div class="file-drop__content" id="file-drop-content">
+                    <span class="file-drop__icon">⊕</span>
+                    <p class="file-drop__label">Arrastra la imagen o <strong>haz clic</strong></p>
+                    <p class="file-drop__hint mono">PNG, JPG, WEBP — max 2MB</p>
+                  </div>
+                  <div class="file-drop__preview" id="file-preview" style="display:none">
+                    <img id="preview-img" src="" alt="preview"/>
+                    <button class="file-remove" id="btn-remove-file">✕</button>
+                  </div>
+                </div>
+              </div>
+
+              <div id="curso-error" class="alert alert--error" style="display:none">
+                <span class="alert__icon">⚠</span>
+                <span id="curso-error-msg">Completa todos los campos.</span>
+              </div>
+              <div id="curso-success" class="alert alert--success" style="display:none">
+                <span class="alert__icon">✓</span>
+                <span>Curso creado correctamente.</span>
+              </div>
+
+              <!-- 
+                ════════════════════════════════════════
+                TODO: Reemplazar con:
+
+                const formData = new FormData();
+                formData.append('nombre', nombre);
+                formData.append('profesorId', profesorId);
+                formData.append('thumbnail', fileInput.files[0]);
+
+                const res = await fetch('/api/cursos', {
+                  method: 'POST',
+                  headers: { 'Authorization': `Bearer ${localStorage.getItem('jwt_token')}` },
+                  body: formData
+                });
+                ════════════════════════════════════════
+              -->
+              <button class="btn btn--primary btn--full" id="btn-add-curso">
+                <span class="btn__label">Publicar Curso</span>
+                <span class="btn__arrow">+</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Lista de cursos -->
+          <div class="card card--table">
+            <div class="card__header">
+              <h3 class="card__title">Catálogo de Cursos</h3>
+              <button class="btn-icon" id="btn-refresh-cursos" title="Actualizar">↻</button>
+            </div>
+            <div class="table-wrapper">
+              <table class="data-table" id="tabla-cursos">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Curso</th>
+                    <th>Profesor</th>
+                    <th>Miniatura</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="tbody-cursos">
+                  <tr class="table-empty">
+                    <td colspan="5"><span class="mono">// Sin registros aún</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+
+      <!-- MÓDULO: ANALÍTICAS -->
+      <section id="module-analiticas" class="module">
+        <div class="module-header">
+          <div>
+            <p class="module-eyebrow">Reportes</p>
+            <h2 class="module-title">Analíticas</h2>
+          </div>
+          <div class="module-stats">
+            <div class="stat-chip">
+              <span class="stat-chip__value">En vivo</span>
+              <span class="stat-chip__label">datos mock</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 
+          ════════════════════════════════════════
+          TODO: Al montar este módulo, fetchear:
+
+          const [vistas, calificaciones] = await Promise.all([
+            fetch('/api/analiticas/vistas', { headers: { 'Authorization': `Bearer ${localStorage.getItem('jwt_token')}` } }).then(r => r.json()),
+            fetch('/api/analiticas/calificaciones', { headers: { 'Authorization': `Bearer ${localStorage.getItem('jwt_token')}` } }).then(r => r.json())
+          ]);
+          renderAnaliticas(vistas.data, calificaciones.data);
+          ════════════════════════════════════════
+        -->
+
+        <div class="content-grid content-grid--analytics">
+
+          <!-- Sección Visualizaciones -->
+          <div class="card">
+            <div class="card__header">
+              <h3 class="card__title">Visualizaciones por Curso</h3>
+              <span class="card__badge card__badge--info">views</span>
+            </div>
+            <div class="card__body">
+              <div class="analytics-table-wrapper">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Curso</th>
+                      <th>Vistas</th>
+                      <th>Tendencia</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tbody-vistas">
+                    <!-- Datos de ejemplo (mock) — reemplazar con respuesta del backend -->
+                    <tr>
+                      <td>Diseño UX Avanzado</td>
+                      <td><span class="badge-number">4,821</span></td>
+                      <td><span class="trend trend--up">↑ 12%</span></td>
+                    </tr>
+                    <tr>
+                      <td>Python para Datos</td>
+                      <td><span class="badge-number">3,654</span></td>
+                      <td><span class="trend trend--up">↑ 8%</span></td>
+                    </tr>
+                    <tr>
+                      <td>React & Next.js</td>
+                      <td><span class="badge-number">2,990</span></td>
+                      <td><span class="trend trend--down">↓ 3%</span></td>
+                    </tr>
+                    <tr>
+                      <td>Marketing Digital</td>
+                      <td><span class="badge-number">2,410</span></td>
+                      <td><span class="trend trend--up">↑ 21%</span></td>
+                    </tr>
+                    <tr>
+                      <td>Fotografía Creativa</td>
+                      <td><span class="badge-number">1,876</span></td>
+                      <td><span class="trend trend--neutral">→ 0%</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Barras visuales de vistas -->
+              <div class="bar-chart" id="bar-chart-vistas">
+                <div class="bar-chart__item">
+                  <span class="bar-chart__label">Diseño UX</span>
+                  <div class="bar-chart__track">
+                    <div class="bar-chart__fill" style="width: 100%">4,821</div>
+                  </div>
+                </div>
+                <div class="bar-chart__item">
+                  <span class="bar-chart__label">Python</span>
+                  <div class="bar-chart__track">
+                    <div class="bar-chart__fill" style="width: 75.8%">3,654</div>
+                  </div>
+                </div>
+                <div class="bar-chart__item">
+                  <span class="bar-chart__label">React</span>
+                  <div class="bar-chart__track">
+                    <div class="bar-chart__fill" style="width: 62%">2,990</div>
+                  </div>
+                </div>
+                <div class="bar-chart__item">
+                  <span class="bar-chart__label">Marketing</span>
+                  <div class="bar-chart__track">
+                    <div class="bar-chart__fill" style="width: 50%">2,410</div>
+                  </div>
+                </div>
+                <div class="bar-chart__item">
+                  <span class="bar-chart__label">Fotografía</span>
+                  <div class="bar-chart__track">
+                    <div class="bar-chart__fill" style="width: 38.9%">1,876</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sección Calificaciones -->
+          <div class="card">
+            <div class="card__header">
+              <h3 class="card__title">Calificaciones Promedio</h3>
+              <span class="card__badge card__badge--gold">★ rating</span>
+            </div>
+            <div class="card__body">
+              <div class="ratings-list" id="ratings-list">
+                <!-- Datos de ejemplo (mock) — reemplazar con respuesta del backend -->
+              </div>
+
+              <!-- 
+                Input de calificación con soporte decimal (0.5 incrementos).
+                ════════════════════════════════════════
+                TODO: Al guardar:
+                
+                const res = await fetch(`/api/cursos/${cursoId}/rating`, {
+                  method: 'PATCH',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('jwt_token')}`
+                  },
+                  body: JSON.stringify({ rating: parseFloat(inputRating.value) })
+                });
+                ════════════════════════════════════════
+              -->
+              <div class="rating-editor card card--inset">
+                <h4 class="rating-editor__title">Editar calificación</h4>
+                <div class="field-group">
+                  <label class="field-label" for="rating-curso-select">Curso</label>
+                  <div class="select-wrapper">
+                    <select class="select" id="rating-curso-select">
+                      <option value="">— Selecciona —</option>
+                      <option value="1">Diseño UX Avanzado</option>
+                      <option value="2">Python para Datos</option>
+                      <option value="3">React & Next.js</option>
+                      <option value="4">Marketing Digital</option>
+                      <option value="5">Fotografía Creativa</option>
+                    </select>
+                    <span class="select-chevron">▾</span>
+                  </div>
+                </div>
+                <div class="field-group">
+                  <label class="field-label" for="rating-value">
+                    Promedio de estrellas
+                    <span class="field-label__hint mono">(0.5 — 5.0)</span>
+                  </label>
+                  <div class="rating-input-row">
+                    <div class="input-wrapper input-wrapper--small">
+                      <!-- step="0.5" permite incrementos decimales como 4.5 estrellas -->
+                      <input
+                        class="input input--center"
+                        type="number"
+                        id="rating-value"
+                        min="0.5"
+                        max="5.0"
+                        step="0.5"
+                        value="4.5"
+                        placeholder="4.5"
+                      />
+                    </div>
+                    <div class="star-preview" id="star-preview">
+                      <!-- Generado dinámicamente por JS -->
+                    </div>
+                  </div>
+                </div>
+                <button class="btn btn--secondary btn--full" id="btn-save-rating">
+                  <span class="btn__label">Guardar calificación</span>
+                  <span class="btn__arrow">✓</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
